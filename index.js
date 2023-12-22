@@ -8,8 +8,8 @@ function invokeAction({ action, id, name, email, phone }) {
             break;
 
         case 'get':
-            contacts.getContactById(id);
-            break;
+             contacts.getContactById(id);
+         break;
 
         case 'add':
             contacts.addContact(name, email, phone);

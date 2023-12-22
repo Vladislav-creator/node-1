@@ -11,27 +11,31 @@ async function listContacts() {
     const data = await fs.readFile(contactsPath, {encoding: 'utf-8'});
 
     let contacts = JSON.parse(data);
-
-        // console.log('List of contacts: ');
-        // console.log( contacts);
      console.table(contacts);
      return contacts
     };
+
+    async function allContacts() {
+        const data = await fs.readFile(contactsPath, {encoding: 'utf-8'});
+        let contacts = JSON.parse(data);
+         return contacts
+        };
+
 function writeContacts(contacts) {
     return fs.writeFile(contactsPath, JSON.stringify(contacts, undefined, 2));
 }
 
 async function getContactById(id) {
-    const contacts = await listContacts();
+    const contacts = await allContacts();
 
      const contact = contacts.find((contact)=> contact.id === id);
+
      console.table(contact); 
 }
+
 async function addContact(name, email, phone) {
-    const contacts = await listContacts();
+    const contacts = await allContacts();
     let newContact = {
-        //id: crypto.randomUUID,
-        // id: contacts.length + 1,
          id: uuidv4(),
        name: name,
        email: email,
@@ -46,7 +50,7 @@ async function addContact(name, email, phone) {
 }
 
 async function removeContact(contactId) {
-    const contacts = await listContacts();
+    const contacts = await allContacts();
 
      const index = contacts.findIndex((contact)=> contact.id === contactId);
      if(index === -1){
@@ -56,11 +60,7 @@ async function removeContact(contactId) {
      contacts.splice(index, 1)
      await writeContacts(contacts)
 }
-//removeContact(11)
-//addContact('Alex Beketov', 'alex21-82@mail.ru', '0978556455')
- //getContactById("qdggE76Jtbfd9eWJHrssH")
-// writeContacts((  {id: 1, title: "Title1", author: "Author1"}))
- //listContacts()
+
 module.exports = {
     listContacts,
     getContactById,
