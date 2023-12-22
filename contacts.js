@@ -2,6 +2,7 @@ const { log } = require('node:console');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 // const crypto = require('node:crypto');
+const { v4: uuidv4 } = require('uuid');
 
 
 const contactsPath = path.resolve('./db/contacts.json');
@@ -14,6 +15,7 @@ async function listContacts() {
         // console.log('List of contacts: ');
         // console.log( contacts);
      console.table(contacts);
+     return contacts
     };
 function writeContacts(contacts) {
     return fs.writeFile(contactsPath, JSON.stringify(contacts, undefined, 2));
@@ -29,7 +31,8 @@ async function addContact(name, email, phone) {
     const contacts = await listContacts();
     let newContact = {
         //id: crypto.randomUUID,
-        id: contacts.length + 1,
+        // id: contacts.length + 1,
+         id: uuidv4(),
        name: name,
        email: email,
        phone: phone,
@@ -37,7 +40,7 @@ async function addContact(name, email, phone) {
    console.table(newContact);
     contacts.push(newContact);
     await writeContacts(contacts)
-    // return newContact 
+     return newContact 
     
     
 }
