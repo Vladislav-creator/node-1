@@ -1,7 +1,6 @@
 const { log } = require('node:console');
 const fs = require('node:fs/promises');
 const path = require('node:path');
-// const crypto = require('node:crypto');
 const { v4: uuidv4 } = require('uuid');
 
 
@@ -11,7 +10,7 @@ async function listContacts() {
     const data = await fs.readFile(contactsPath, {encoding: 'utf-8'});
 
     let contacts = JSON.parse(data);
-     console.table(contacts);
+    
      return contacts
     };
 
@@ -25,12 +24,13 @@ function writeContacts(contacts) {
     return fs.writeFile(contactsPath, JSON.stringify(contacts, undefined, 2));
 }
 
-async function getContactById(id) {
+async function getContactById(contactId) {
     const contacts = await allContacts();
 
-     const contact = contacts.find((contact)=> contact.id === id);
+     const contact = contacts.find((contact)=> contact.id === contactId);
+    
+      return  contact || null
 
-     console.table(contact); 
 }
 
 async function addContact(name, email, phone) {
@@ -41,7 +41,7 @@ async function addContact(name, email, phone) {
        email: email,
        phone: phone,
    }
-   console.table(newContact);
+   
     contacts.push(newContact);
     await writeContacts(contacts)
      return newContact 
@@ -54,11 +54,12 @@ async function removeContact(contactId) {
 
      const index = contacts.findIndex((contact)=> contact.id === contactId);
      if(index === -1){
-        return undefined;
+        return null;
      }
-     console.table(contacts[index]); 
-     contacts.splice(index, 1)
-     await writeContacts(contacts)
+      
+      const newContacts = [...contacts.slice(0, index), ...contacts.slice(index + 1)];
+      await writeContacts(newContacts);
+     return contacts[index]
 }
 
 module.exports = {
